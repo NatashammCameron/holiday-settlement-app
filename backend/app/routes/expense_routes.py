@@ -43,3 +43,19 @@ def get_expenses(
     expenses = db.query(Expense).all()
 
     return expenses
+
+@router.get(
+    "/holiday/{holiday_id}",
+    response_model=list[ExpenseResponse]
+)
+def get_expenses_by_holiday(
+    holiday_id: int,
+    db: Session = Depends(get_db)
+):
+    expenses = (
+        db.query(Expense)
+        .filter(Expense.holiday_id == holiday_id)
+        .all()
+    )
+
+    return expenses
