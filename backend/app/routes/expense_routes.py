@@ -33,3 +33,13 @@ def create_expense(
     db.refresh(new_expense)
 
     return new_expense
+@router.get(
+    "/",
+    response_model=list[ExpenseResponse]
+)
+def get_expenses(
+    db: Session = Depends(get_db)
+):
+    expenses = db.query(Expense).all()
+
+    return expenses
