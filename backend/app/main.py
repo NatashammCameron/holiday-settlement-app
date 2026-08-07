@@ -8,6 +8,9 @@ from app.routes.expense_routes import router as expense_router
 from app.routes.participant_routes import (
     router as participant_router
 )
+from app.routes.settlement_routes import (
+    router as settlement_router
+)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -28,3 +31,5 @@ app = FastAPI(
 app.include_router(holiday_router)
 app.include_router(participant_router)
 app.include_router(expense_router)
+app.include_router(settlement_router)
+
