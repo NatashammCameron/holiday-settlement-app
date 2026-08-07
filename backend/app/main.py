@@ -4,6 +4,7 @@ from app.database.database import Base, engine
 from app.models.holiday import Holiday
 from app.models.participant import Participant
 from app.models.expense import Expense
+from app.routes.expense_routes import router as expense_router
 from app.routes.participant_routes import (
     router as participant_router
 )
@@ -26,3 +27,4 @@ app = FastAPI(
 
 app.include_router(holiday_router)
 app.include_router(participant_router)
+app.include_router(expense_router)
