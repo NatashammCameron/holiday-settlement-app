@@ -32,3 +32,14 @@ def create_participant(
     db.refresh(new_participant)
 
     return new_participant
+
+@router.get(
+    "/",
+    response_model=list[ParticipantResponse]
+)
+def get_participants(
+    db: Session = Depends(get_db)
+):
+    participants = db.query(Participant).all()
+
+    return participants
