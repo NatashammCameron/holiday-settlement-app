@@ -82,3 +82,24 @@ def holiday_balances(
         holiday_id,
         db
     )
+
+from app.services.settlement_service import (
+    calculate_settlements
+)
+
+@router.get(
+    "/holiday/{holiday_id}/payments"
+)
+def settlement_payments(
+    holiday_id: int,
+    db: Session = Depends(get_db)
+):
+    balances = calculate_net_balances(
+        holiday_id,
+        db
+    )
+
+    return calculate_settlements(
+        balances,
+        db
+    )
