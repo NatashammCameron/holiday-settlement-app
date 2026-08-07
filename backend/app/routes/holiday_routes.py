@@ -32,3 +32,13 @@ def create_holiday(
     db.refresh(new_holiday)
 
     return new_holiday
+@router.get(
+    "/",
+    response_model=list[HolidayResponse]
+)
+def get_holidays(
+    db: Session = Depends(get_db)
+):
+    holidays = db.query(Holiday).all()
+
+    return holidays
