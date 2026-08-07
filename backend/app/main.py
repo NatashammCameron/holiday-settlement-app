@@ -3,6 +3,7 @@ from app.routes.holiday_routes import router as holiday_router
 from app.database.database import Base, engine
 from app.models.holiday import Holiday
 from app.models.participant import Participant
+from app.models.expense import Expense
 from app.routes.participant_routes import (
     router as participant_router
 )
