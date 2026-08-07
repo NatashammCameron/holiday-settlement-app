@@ -7,6 +7,9 @@ from app.database.dependencies import get_db
 from app.services.balance_service import (
     calculate_balances
 )
+from app.services.settlement_service import (
+    calculate_net_balances
+)
 
 router = APIRouter(
     prefix="/settlements",
@@ -67,3 +70,15 @@ def get_expense_share(
         "share_per_person": share,
         "participants": len(splits)
     }
+
+@router.get(
+    "/holiday/{holiday_id}/balances"
+)
+def holiday_balances(
+    holiday_id: int,
+    db: Session = Depends(get_db)
+):
+    return calculate_net_balances(
+        holiday_id,
+        db
+    )
