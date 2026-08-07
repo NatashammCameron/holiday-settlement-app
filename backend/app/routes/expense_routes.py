@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.database.dependencies import get_db
 from app.models.expense import Expense
+from app.models.expense_split import ExpenseSplit
 from app.schemas.expense_schema import (
     ExpenseCreate,
     ExpenseResponse
@@ -12,6 +13,7 @@ router = APIRouter(
     prefix="/expenses",
     tags=["Expenses"]
 )
+
 
 @router.post(
     "/",
@@ -32,7 +34,20 @@ def create_expense(
     db.commit()
     db.refresh(new_expense)
 
+    for participant_id in expense.participant_ids:
+
+        split = ExpenseSplit(
+            expense_id=new_expense.id,
+            participant_id=participant_id
+        )
+
+        db.add(split)
+
+    db.commit()
+
     return new_expense
+
+
 @router.get(
     "/",
     response_model=list[ExpenseResponse]
@@ -43,6 +58,7 @@ def get_expenses(
     expenses = db.query(Expense).all()
 
     return expenses
+
 
 @router.get(
     "/holiday/{holiday_id}",
