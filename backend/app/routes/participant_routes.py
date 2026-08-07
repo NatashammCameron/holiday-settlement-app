@@ -43,3 +43,19 @@ def get_participants(
     participants = db.query(Participant).all()
 
     return participants
+
+@router.get(
+    "/holiday/{holiday_id}",
+    response_model=list[ParticipantResponse]
+)
+def get_participants_by_holiday(
+    holiday_id: int,
+    db: Session = Depends(get_db)
+):
+    participants = (
+        db.query(Participant)
+        .filter(Participant.holiday_id == holiday_id)
+        .all()
+    )
+
+    return participants
