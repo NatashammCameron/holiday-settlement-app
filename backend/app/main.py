@@ -5,6 +5,7 @@ from app.models.holiday import Holiday
 from app.models.participant import Participant
 from app.models.expense import Expense
 from app.routes.expense_routes import router as expense_router
+from app.models.expense_split import ExpenseSplit
 from app.routes.participant_routes import (
     router as participant_router
 )
