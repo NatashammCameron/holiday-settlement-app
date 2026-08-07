@@ -12,6 +12,9 @@ from app.routes.participant_routes import (
 from app.routes.settlement_routes import (
     router as settlement_router
 )
+from app.routes.settlement_routes import (
+    router as settlement_router
+)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
