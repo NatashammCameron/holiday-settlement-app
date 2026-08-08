@@ -42,3 +42,19 @@ def get_holidays(
     holidays = db.query(Holiday).all()
 
     return holidays
+
+@router.get(
+    "/{holiday_id}",
+    response_model=HolidayResponse
+)
+def get_holiday(
+    holiday_id: int,
+    db: Session = Depends(get_db)
+):
+    holiday = (
+        db.query(Holiday)
+        .filter(Holiday.id == holiday_id)
+        .first()
+    )
+
+    return holiday
