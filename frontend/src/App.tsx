@@ -1,10 +1,7 @@
-function Dashboard() {
-    return (
-        <div>
-            <h1>Holiday Settlement App</h1>
-            <h2>Dashboard</h2>
-        </div>
-    );
+import Dashboard from "./pages/Dashboard";
+
+function App() {
+    return <Dashboard />;
 }
 
-export default Dashboard;
+export default App;
