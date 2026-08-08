@@ -11,6 +11,7 @@ from app.routes.holiday_routes import router as holiday_router
 from app.routes.participant_routes import router as participant_router
 from app.routes.expense_routes import router as expense_router
 from app.routes.settlement_routes import router as settlement_router
+from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine)
 
@@ -19,6 +20,15 @@ app = FastAPI(
     version="1.0.0"
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def home():
