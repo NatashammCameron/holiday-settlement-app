@@ -41,3 +41,18 @@ h2 {
     .holiday-card:hover {
         transform: translateY(-2px);
     }
+
+.holiday-card {
+    display: block;
+    text-decoration: none;
+    color: #111827;
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.2s;
+}
+
+    .holiday-card:hover {
+        transform: translateY(-2px);
+    }

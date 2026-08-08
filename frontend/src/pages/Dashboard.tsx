@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { Holiday } from "../types/Holiday";
+import { Link } from "react-router-dom";
 import {
     getHolidays,
     createHoliday
@@ -77,12 +78,14 @@ function Dashboard() {
 
             <div className="holiday-list">
                 {holidays.map((holiday) => (
-                    <div
+                    <Link
+                        to={`/holiday/${holiday.id}`}
                         key={holiday.id}
                         className="holiday-card"
                     >
                         {holiday.name}
-                    </div>
+                    </Link>
+
                 ))}
             </div>
         </div>
