@@ -18,6 +18,12 @@ import {
     createExpense
 } from "../services/expenseService";
 
+import type { Settlement } from "../types/Settlement";
+
+import {
+    getSettlements
+} from "../services/settlementService";
+
 function HolidayDetails() {
     const { id } = useParams();
 
@@ -33,6 +39,9 @@ function HolidayDetails() {
     const [expenses, setExpenses] =
         useState<Expense[]>([]);
 
+    const [settlements, setSettlements] =
+        useState<Settlement[]>([]);
+
     const [description, setDescription] =
         useState("");
 
@@ -41,6 +50,9 @@ function HolidayDetails() {
 
     const [paidBy, setPaidBy] =
         useState("");
+
+    const [selectedParticipants, setSelectedParticipants] =
+        useState<number[]>([]);
 
     useEffect(() => {
         async function loadHoliday() {
@@ -86,6 +98,21 @@ function HolidayDetails() {
         loadExpenses();
     }, [id]);
 
+    useEffect(() => {
+        async function loadSettlements() {
+            if (!id) {
+                return;
+            }
+
+            const data =
+                await getSettlements(id);
+
+            setSettlements(data);
+        }
+
+        loadSettlements();
+    }, [id]);
+
     async function handleCreateParticipant() {
         if (!id || !participantName.trim()) {
             return;
@@ -109,7 +136,8 @@ function HolidayDetails() {
             !id ||
             !description ||
             !amount ||
-            !paidBy
+            !paidBy ||
+            selectedParticipants.length === 0
         ) {
             return;
         }
@@ -118,7 +146,8 @@ function HolidayDetails() {
             description,
             Number(amount),
             id,
-            Number(paidBy)
+            Number(paidBy),
+            selectedParticipants
         );
 
         const updatedExpenses =
@@ -126,9 +155,17 @@ function HolidayDetails() {
 
         setExpenses(updatedExpenses);
 
+        const updatedSettlements =
+            await getSettlements(id);
+
+        setSettlements(
+            updatedSettlements
+        );
+
         setDescription("");
         setAmount("");
         setPaidBy("");
+        setSelectedParticipants([]);
     }
 
     if (!holiday) {
@@ -200,6 +237,39 @@ function HolidayDetails() {
                 }
             />
 
+            <h3>Shared By</h3>
+
+            {participants.map((participant) => (
+                <div key={participant.id}>
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={selectedParticipants.includes(
+                                participant.id
+                            )}
+                            onChange={(e) => {
+                                if (e.target.checked) {
+                                    setSelectedParticipants([
+                                        ...selectedParticipants,
+                                        participant.id
+                                    ]);
+                                } else {
+                                    setSelectedParticipants(
+                                        selectedParticipants.filter(
+                                            (id) =>
+                                                id !==
+                                                participant.id
+                                        )
+                                    );
+                                }
+                            }}
+                        />
+
+                        {participant.name}
+                    </label>
+                </div>
+            ))}
+
             <select
                 value={paidBy}
                 onChange={(e) =>
@@ -237,7 +307,7 @@ function HolidayDetails() {
             <ul>
                 {expenses.map((expense) => (
                     <li key={expense.id}>
-                        {expense.description} - £
+                        {expense.description} - {"\u00A3"}
                         {expense.amount}
                     </li>
                 ))}
@@ -245,7 +315,23 @@ function HolidayDetails() {
 
             <h2>Settlements</h2>
 
-            <p>No settlements yet</p>
+            {settlements.length === 0 ? (
+                <p>No settlements yet</p>
+            ) : (
+                <ul>
+                    {settlements.map(
+                        (settlement, index) => (
+                            <li key={index}>
+                                {settlement.from}
+                                {" owes "}
+                                {settlement.to}
+                                {" £"}
+                                {settlement.amount}
+                            </li>
+                        )
+                    )}
+                </ul>
+            )}
         </div>
     );
 }

@@ -18,7 +18,8 @@ export async function createExpense(
     description: string,
     amount: number,
     holidayId: string,
-    paidByParticipantId: number
+    paidByParticipantId: number,
+    participantIds: number[]
 ): Promise<void> {
     const response = await fetch(
         "http://127.0.0.1:8000/expenses/",
@@ -33,9 +34,7 @@ export async function createExpense(
                 holiday_id: Number(holidayId),
                 paid_by_participant_id:
                     paidByParticipantId,
-                participant_ids: [
-                    paidByParticipantId
-                ]
+                participant_ids: participantIds
             
             })
         }
