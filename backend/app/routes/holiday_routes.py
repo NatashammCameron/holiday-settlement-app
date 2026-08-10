@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from sqlalchemy.orm import Session
 
@@ -43,6 +43,37 @@ def get_holidays(
 
     return holidays
 
+@router.put(
+    "/{holiday_id}",
+    response_model=HolidayResponse
+)
+def update_holiday(
+    holiday_id: int,
+    holiday: HolidayCreate,
+    db: Session = Depends(get_db)
+):
+    existing_holiday = (
+        db.query(Holiday)
+        .filter(
+            Holiday.id == holiday_id
+        )
+        .first()
+    )
+
+    if not existing_holiday:
+        raise HTTPException(
+            status_code=404,
+            detail="Holiday not found"
+        )
+
+    existing_holiday.name = holiday.name
+
+    db.commit()
+    db.refresh(existing_holiday)
+
+    return existing_holiday
+
+
 @router.get(
     "/{holiday_id}",
     response_model=HolidayResponse
@@ -58,3 +89,29 @@ def get_holiday(
     )
 
     return holiday
+
+@router.delete("/{holiday_id}")
+def delete_holiday(
+    holiday_id: int,
+    db: Session = Depends(get_db)
+):
+    holiday = (
+        db.query(Holiday)
+        .filter(
+            Holiday.id == holiday_id
+        )
+        .first()
+    )
+
+    if not holiday:
+        raise HTTPException(
+            status_code=404,
+            detail="Holiday not found"
+        )
+
+    db.delete(holiday)
+    db.commit()
+
+    return {
+        "message": "Holiday deleted"
+    }

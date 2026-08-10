@@ -48,3 +48,44 @@ export async function getHoliday(
 
     return response.json();
 }
+
+export async function updateHoliday(
+    holidayId: string,
+    name: string
+): Promise<void> {
+    const response = await fetch(
+        `http://127.0.0.1:8000/holidays/${holidayId}`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name
+            })
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error(
+            "Failed to update holiday"
+        );
+    }
+}
+
+export async function deleteHoliday(
+    holidayId: string
+): Promise<void> {
+    const response = await fetch(
+        `http://127.0.0.1:8000/holidays/${holidayId}`,
+        {
+            method: "DELETE"
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error(
+            "Failed to delete holiday"
+        );
+    }
+}
