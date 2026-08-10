@@ -1,0 +1,220 @@
+﻿============================================================
+Dashboard — "Trip Ledger" design system
+Shares tokens with HolidayDetails.css so the app feels
+like one continuous journal, not two separate skins.
+============================================================ */
+
+.dashboard-page {
+    --ink: #1b2a38;
+    --paper: #d5f0da;
+    --sand: #d1f0e7;
+    --sand-line: #2e4031;
+    --coral: #e2694f;
+    --coral-dark: #c8543c;
+    --sea: #2f6b67;
+    --sea-dark: #234f4c;
+    --slate: #6f7580;
+    background-color: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    font-family: "Public Sans", "Segoe UI", system-ui, sans-serif;
+    background-image: radial-gradient(circle at 1px 1px, rgba(27, 42, 56, 0.05) 1px, transparent 0);
+    background-size: 22px 22px;
+}
+
+.dashboard-page * {
+    box-sizing: border-box;
+}
+
+.dashboard-page .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 56px 24px 96px;
+}
+
+/* ---------- Hero ---------- */
+
+.dashboard-hero {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 22px;
+    margin-bottom: 32px;
+}
+
+.dashboard-eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin: 0 0 8px;
+}
+
+.dashboard-title {
+    font-family: "Fraunces", "Georgia", serif;
+    font-weight: 600;
+    font-size: 42px;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin: 0 0 8px;
+}
+
+.dashboard-subtitle {
+    font-size: 15px;
+    color: var(--slate);
+    margin: 0;
+    max-width: 46ch;
+}
+
+/* ---------- New holiday form ---------- */
+
+.new-holiday-form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 44px;
+}
+
+    .new-holiday-form .text-input {
+        font-family: "Public Sans", sans-serif;
+        font-size: 14px;
+        padding: 12px 14px;
+        border: 1.5px solid var(--sand-line);
+        border-radius: 3px;
+        background: #fff;
+        color: var(--ink);
+        flex: 1;
+        min-width: 200px;
+    }
+
+        .new-holiday-form .text-input:focus {
+            outline: none;
+            border-color: var(--sea);
+            box-shadow: 0 0 0 3px rgba(47, 107, 103, 0.15);
+        }
+
+    .new-holiday-form .btn {
+        font-family: "Public Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        padding: 0 20px;
+        border-radius: 3px;
+        border: 1.5px solid var(--ink);
+        background: var(--ink);
+        color: var(--paper);
+        cursor: pointer;
+        transition: transform 0.12s ease, background-color 0.12s ease;
+    }
+
+        .new-holiday-form .btn:hover {
+            transform: translateY(-1px);
+            background: var(--sea-dark);
+            border-color: var(--sea-dark);
+        }
+
+        .new-holiday-form .btn:focus-visible {
+            outline: 2px solid var(--sea);
+            outline-offset: 2px;
+        }
+
+/* ---------- Holiday list section ---------- */
+
+.dashboard-page h2 {
+    font-family: "Fraunces", "Georgia", serif;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 18px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+    .dashboard-page h2::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1.5px dashed var(--sand-line);
+        transform: translateY(-4px);
+    }
+
+.holiday-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+}
+
+.holiday-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border: 1.5px solid var(--ink);
+    border-radius: 6px;
+    padding: 18px 16px;
+    text-decoration: none;
+    color: var(--ink);
+    font-family: "Fraunces", "Georgia", serif;
+    font-weight: 600;
+    font-size: 17px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+    .holiday-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        background: var(--coral);
+    }
+
+    .holiday-card::after {
+        content: "→";
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 400;
+        color: var(--slate);
+        margin-left: 12px;
+        transition: transform 0.12s ease;
+    }
+
+    .holiday-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 0 var(--sand-line);
+    }
+
+        .holiday-card:hover::after {
+            transform: translateX(3px);
+        }
+
+    .holiday-card:focus-visible {
+        outline: 2px solid var(--sea);
+        outline-offset: 2px;
+    }
+
+.dashboard-empty {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    color: var(--slate);
+    border: 1px dashed var(--sand-line);
+    border-radius: 6px;
+    padding: 28px;
+    text-align: center;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 520px) {
+    .dashboard-title {
+        font-size: 32px;
+    }
+
+    .new-holiday-form {
+        flex-direction: column;
+    }
+
+        .new-holiday-form .btn {
+            padding: 12px 20px;
+        }
+}

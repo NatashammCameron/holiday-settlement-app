@@ -1,0 +1,403 @@
+/* ============================================================
+   Holiday Details — "Trip Ledger" design system
+   Palette born from a well-used travel journal: warm paper,
+   deep ink, a coral "paid" stamp, a sea-green "owed" stamp.
+   ============================================================ */
+
+.holiday-page {
+    --ink: #1b2a38;
+    --paper: #d5f0da;
+    --sand: #d1f0e7;
+    --sand-line: #2e4031;
+    --coral: #e2694f;
+    --coral-dark: #c8543c;
+    --sea: #2f6b67;
+    --sea-dark: #234f4c;
+    --slate: #6f7580;
+    --danger: #b1493a;
+    background-color: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    font-family: "Public Sans", "Segoe UI", system-ui, sans-serif;
+    background-image: radial-gradient(circle at 1px 1px, rgba(27, 42, 56, 0.05) 1px, transparent 0);
+    background-size: 22px 22px;
+}
+
+    .holiday-page * {
+        box-sizing: border-box;
+    }
+
+    .holiday-page .container {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 48px 24px 96px;
+    }
+
+/* ---------- Header ---------- */
+
+.holiday-header {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+    .holiday-header .eyebrow {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin: 0 0 6px;
+    }
+
+.holiday-title {
+    font-family: "Fraunces", "Georgia", serif;
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 1.05;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.holiday-id {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--slate);
+    margin: 6px 0 0;
+}
+
+.holiday-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* ---------- Buttons (shared) ---------- */
+
+.btn {
+    font-family: "Public Sans", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 9px 16px;
+    border-radius: 3px;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: transform 0.12s ease, background-color 0.12s ease, color 0.12s ease;
+}
+
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .btn:focus-visible {
+        outline: 2px solid var(--sea);
+        outline-offset: 2px;
+    }
+
+.btn-primary,
+.edit-button {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+}
+
+    .btn-primary:hover,
+    .edit-button:hover {
+        background: var(--sea-dark);
+        border-color: var(--sea-dark);
+    }
+
+.delete-button {
+    border-color: var(--danger);
+    color: var(--danger);
+    background: transparent;
+}
+
+    .delete-button:hover {
+        background: var(--danger);
+        color: var(--paper);
+    }
+
+.btn-small {
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 2px;
+    margin-left: 8px;
+}
+
+/* ---------- Section shell ---------- */
+
+.ledger-section {
+    margin-bottom: 40px;
+}
+
+    .ledger-section h2 {
+        font-family: "Fraunces", "Georgia", serif;
+        font-size: 22px;
+        font-weight: 600;
+        margin: 0 0 4px;
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+    }
+
+        .ledger-section h2::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1.5px dashed var(--sand-line);
+            transform: translateY(-4px);
+        }
+
+.section-hint {
+    font-size: 13px;
+    color: var(--slate);
+    margin: 0 0 16px;
+}
+
+/* ---------- Forms ---------- */
+
+.form-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.text-input,
+.number-input,
+.select-input {
+    font-family: "Public Sans", sans-serif;
+    font-size: 14px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--sand-line);
+    border-radius: 3px;
+    background: #fff;
+    color: var(--ink);
+    flex: 1;
+    min-width: 140px;
+}
+
+    .text-input:focus,
+    .number-input:focus,
+    .select-input:focus {
+        outline: none;
+        border-color: var(--sea);
+        box-shadow: 0 0 0 3px rgba(47, 107, 103, 0.15);
+    }
+
+.checkbox-group {
+    background: var(--sand);
+    border: 1px solid var(--sand-line);
+    border-radius: 4px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+}
+
+    .checkbox-group h3,
+    .checkbox-group h4 {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--slate);
+        margin: 0 0 8px;
+    }
+
+.checkbox-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+    .checkbox-label input {
+        accent-color: var(--sea);
+        width: 15px;
+        height: 15px;
+    }
+
+/* ---------- Participants list ---------- */
+
+.participant-list,
+.expense-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.participant-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 4px;
+    border-bottom: 1px dotted var(--sand-line);
+    font-size: 15px;
+}
+
+    .participant-row:first-child {
+        border-top: 1px dotted var(--sand-line);
+    }
+
+.participant-name {
+    font-weight: 500;
+}
+
+.row-actions {
+    display: flex;
+    gap: 6px;
+}
+
+/* ---------- Expense "receipt" rows ---------- */
+
+.expense-card {
+    border-bottom: 1px dotted var(--sand-line);
+    padding: 14px 4px;
+}
+
+    .expense-card:first-child {
+        border-top: 1px dotted var(--sand-line);
+    }
+
+.expense-view {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.expense-desc {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.expense-amount {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--coral-dark);
+    margin-left: auto;
+    margin-right: 8px;
+    white-space: nowrap;
+}
+
+.expense-edit-form {
+    background: var(--sand);
+    border: 1px solid var(--sand-line);
+    border-radius: 4px;
+    padding: 14px;
+    margin-top: 6px;
+}
+
+.expense-edit-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+/* ---------- Settlements — boarding-pass stubs ---------- */
+
+.settlement-empty {
+    font-size: 14px;
+    color: var(--slate);
+    font-style: italic;
+}
+
+.settlement-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.settlement-stub {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #fff;
+    border: 1.5px solid var(--ink);
+    border-radius: 6px;
+    padding: 14px 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+    .settlement-stub::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        background: var(--sea);
+    }
+
+.settlement-parties {
+    font-size: 15px;
+    flex: 1;
+}
+
+.settlement-from {
+    font-weight: 700;
+}
+
+.settlement-arrow {
+    color: var(--slate);
+    margin: 0 6px;
+    font-family: "IBM Plex Mono", monospace;
+}
+
+.settlement-to {
+    font-weight: 700;
+    color: var(--sea-dark);
+}
+
+.settlement-amount {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--coral-dark);
+    border-left: 1.5px dashed var(--sand-line);
+    padding-left: 14px;
+}
+
+/* ---------- Loading ---------- */
+
+.holiday-loading {
+    font-family: "IBM Plex Mono", monospace;
+    color: var(--slate);
+    padding: 48px;
+    text-align: center;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 520px) {
+    .holiday-title {
+        font-size: 30px;
+    }
+
+    .form-row {
+        flex-direction: column;
+    }
+
+    .settlement-amount {
+        border-left: none;
+        padding-left: 0;
+    }
+}
