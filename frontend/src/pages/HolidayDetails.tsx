@@ -18,7 +18,9 @@ import type { Expense } from "../types/Expense";
 import {
     getExpenses,
     createExpense,
-    deleteExpense
+    deleteExpense,
+    updateExpense,
+    getExpenseParticipants
 } from "../services/expenseService";
 
 import type { Settlement } from "../types/Settlement";
@@ -56,6 +58,23 @@ function HolidayDetails() {
 
     const [selectedParticipants, setSelectedParticipants] =
         useState<number[]>([]);
+
+    const [editingExpenseId, setEditingExpenseId] =
+        useState<number | null>(null);
+
+    const [editDescription, setEditDescription] =
+        useState("");
+
+    const [editAmount, setEditAmount] =
+        useState("");
+
+    const [editPaidBy, setEditPaidBy] =
+        useState("");
+
+    const [
+        editSelectedParticipants,
+        setEditSelectedParticipants
+    ] = useState<number[]>([]);
 
     useEffect(() => {
         async function loadHoliday() {
@@ -216,14 +235,80 @@ function HolidayDetails() {
         const updatedSettlements =
             await getSettlements(id);
 
-        setSettlements(
-            updatedSettlements
-        );
+        setSettlements(updatedSettlements);
 
         setDescription("");
         setAmount("");
         setPaidBy("");
         setSelectedParticipants([]);
+    }
+
+    async function handleEditExpense(
+        expense: Expense
+    ) {
+        if (!id) {
+            return;
+        }
+
+        const participantIds =
+            await getExpenseParticipants(
+                expense.id
+            );
+
+        setEditingExpenseId(
+            expense.id
+        );
+
+        setEditDescription(
+            expense.description
+        );
+
+        setEditAmount(
+            expense.amount.toString()
+        );
+
+        setEditPaidBy(
+            expense.paid_by_participant_id.toString()
+        );
+
+        setEditSelectedParticipants(
+            participantIds
+        );
+    }
+
+    async function handleSaveExpenseEdit() {
+        if (
+            !id ||
+            editingExpenseId === null
+        ) {
+            return;
+        }
+
+        await updateExpense(
+            editingExpenseId,
+            editDescription,
+            Number(editAmount),
+            id,
+            Number(editPaidBy),
+            editSelectedParticipants
+        );
+
+        const updatedExpenses =
+            await getExpenses(id);
+
+        setExpenses(updatedExpenses);
+
+        const updatedSettlements =
+            await getSettlements(id);
+
+        setSettlements(updatedSettlements);
+
+        setEditingExpenseId(null);
+
+        setEditDescription("");
+        setEditAmount("");
+        setEditPaidBy("");
+        setEditSelectedParticipants([]);
     }
 
     async function handleDeleteExpense(
@@ -384,9 +469,7 @@ function HolidayDetails() {
                     (participant) => (
                         <option
                             key={participant.id}
-                            value={
-                                participant.id
-                            }
+                            value={participant.id}
                         >
                             {participant.name}
                         </option>
@@ -395,9 +478,7 @@ function HolidayDetails() {
             </select>
 
             <button
-                onClick={
-                    handleCreateExpense
-                }
+                onClick={handleCreateExpense}
             >
                 Add Expense
             </button>
@@ -405,19 +486,151 @@ function HolidayDetails() {
             <ul>
                 {expenses.map((expense) => (
                     <li key={expense.id}>
-                        {expense.description}
-                        {" - £"}
-                        {expense.amount}
+                        {editingExpenseId === expense.id ? (
+                            <div>
+                                <input
+                                    type="text"
+                                    value={editDescription}
+                                    onChange={(e) =>
+                                        setEditDescription(
+                                            e.target.value
+                                        )
+                                    }
+                                />
 
-                        <button
-                            onClick={() =>
-                                handleDeleteExpense(
-                                    expense.id
-                                )
-                            }
-                        >
-                            Delete
-                        </button>
+                                <input
+                                    type="number"
+                                    value={editAmount}
+                                    onChange={(e) =>
+                                        setEditAmount(
+                                            e.target.value
+                                        )
+                                    }
+                                />
+
+                                <select
+                                    value={editPaidBy}
+                                    onChange={(e) =>
+                                        setEditPaidBy(
+                                            e.target.value
+                                        )
+                                    }
+                                >
+                                    {participants.map(
+                                        (participant) => (
+                                            <option
+                                                key={
+                                                    participant.id
+                                                }
+                                                value={
+                                                    participant.id
+                                                }
+                                            >
+                                                {
+                                                    participant.name
+                                                }
+                                            </option>
+                                        )
+                                    )}
+                                </select>
+
+                                <h4>
+                                    Shared By
+                                </h4>
+
+                                {participants.map(
+                                    (participant) => (
+                                        <div
+                                            key={
+                                                participant.id
+                                            }
+                                        >
+                                            <label>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={editSelectedParticipants.includes(
+                                                        participant.id
+                                                    )}
+                                                    onChange={(
+                                                        e
+                                                    ) => {
+                                                        if (
+                                                            e.target
+                                                                .checked
+                                                        ) {
+                                                            setEditSelectedParticipants(
+                                                                [
+                                                                    ...editSelectedParticipants,
+                                                                    participant.id
+                                                                ]
+                                                            );
+                                                        } else {
+                                                            setEditSelectedParticipants(
+                                                                editSelectedParticipants.filter(
+                                                                    (
+                                                                        id
+                                                                    ) =>
+                                                                        id !==
+                                                                        participant.id
+                                                                )
+                                                            );
+                                                        }
+                                                    }}
+                                                />
+
+                                                {
+                                                    participant.name
+                                                }
+                                            </label>
+                                        </div>
+                                    )
+                                )}
+
+                                <button
+                                    onClick={
+                                        handleSaveExpenseEdit
+                                    }
+                                >
+                                    Save
+                                </button>
+
+                                <button
+                                    onClick={() =>
+                                        setEditingExpenseId(
+                                            null
+                                        )
+                                    }
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        ) : (
+                            <>
+                                {expense.description}
+                                {" - £"}
+                                {expense.amount}
+
+                                <button
+                                    onClick={() =>
+                                        handleEditExpense(
+                                            expense
+                                        )
+                                    }
+                                >
+                                    Edit
+                                </button>
+
+                                <button
+                                    onClick={() =>
+                                        handleDeleteExpense(
+                                            expense.id
+                                        )
+                                    }
+                                >
+                                    Delete
+                                </button>
+                            </>
+                        )}
                     </li>
                 ))}
             </ul>

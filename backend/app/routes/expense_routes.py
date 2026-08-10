@@ -59,6 +59,63 @@ def get_expenses(
     return expenses
 
 
+@router.put(
+    "/{expense_id}",
+    response_model=ExpenseResponse
+)
+def update_expense(
+    expense_id: int,
+    expense: ExpenseCreate,
+    db: Session = Depends(get_db)
+):
+    existing_expense = (
+        db.query(Expense)
+        .filter(
+            Expense.id == expense_id
+        )
+        .first()
+    )
+
+    if not existing_expense:
+        raise HTTPException(
+            status_code=404,
+            detail="Expense not found"
+        )
+
+    existing_expense.description = (
+        expense.description
+    )
+
+    existing_expense.amount = (
+        expense.amount
+    )
+
+    existing_expense.paid_by_participant_id = (
+        expense.paid_by_participant_id
+    )
+
+    (
+        db.query(ExpenseSplit)
+        .filter(
+            ExpenseSplit.expense_id == expense_id
+        )
+        .delete()
+    )
+
+    for participant_id in expense.participant_ids:
+        split = ExpenseSplit(
+            expense_id=expense_id,
+            participant_id=participant_id
+        )
+
+        db.add(split)
+
+    db.commit()
+    db.refresh(existing_expense)
+
+    return existing_expense
+
+
 @router.delete("/{expense_id}")
 def delete_expense(
     expense_id: int,
@@ -111,3 +168,24 @@ def get_expenses_by_holiday(
     )
 
     return expenses
+
+
+@router.get(
+    "/{expense_id}/participants"
+)
+def get_expense_participants(
+    expense_id: int,
+    db: Session = Depends(get_db)
+):
+    splits = (
+        db.query(ExpenseSplit)
+        .filter(
+            ExpenseSplit.expense_id == expense_id
+        )
+        .all()
+    )
+
+    return [
+        split.participant_id
+        for split in splits
+    ]
