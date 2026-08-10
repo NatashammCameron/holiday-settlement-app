@@ -40,7 +40,25 @@ export async function createExpense(
         }
     );
 
+
     if (!response.ok) {
         throw new Error("Failed to create expense");
+    }
+}
+
+export async function deleteExpense(
+    expenseId: number
+): Promise<void> {
+    const response = await fetch(
+        `http://127.0.0.1:8000/expenses/${expenseId}`,
+        {
+            method: "DELETE"
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error(
+            "Failed to delete expense"
+        );
     }
 }
