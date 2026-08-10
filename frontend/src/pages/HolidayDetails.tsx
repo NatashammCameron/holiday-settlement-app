@@ -9,7 +9,8 @@ import type { Participant } from "../types/Participant";
 import {
     getParticipants,
     createParticipant,
-    deleteParticipant
+    deleteParticipant,
+    updateParticipant
 } from "../services/participantService";
 
 import type { Expense } from "../types/Expense";
@@ -131,6 +132,34 @@ function HolidayDetails() {
         setParticipants(updatedParticipants);
 
         setParticipantName("");
+    }
+
+    async function handleEditParticipant(
+        participant: Participant
+    ) {
+        if (!id) {
+            return;
+        }
+
+        const newName = prompt(
+            "Enter new participant name",
+            participant.name
+        );
+
+        if (!newName?.trim()) {
+            return;
+        }
+
+        await updateParticipant(
+            participant.id,
+            newName,
+            id
+        );
+
+        const updatedParticipants =
+            await getParticipants(id);
+
+        setParticipants(updatedParticipants);
     }
 
     async function handleDeleteParticipant(
@@ -257,6 +286,16 @@ function HolidayDetails() {
                             key={participant.id}
                         >
                             {participant.name}
+
+                            <button
+                                onClick={() =>
+                                    handleEditParticipant(
+                                        participant
+                                    )
+                                }
+                            >
+                                Edit
+                            </button>
 
                             <button
                                 onClick={() =>

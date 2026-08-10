@@ -64,6 +64,35 @@ def get_participants_by_holiday(
     )
 
     return participants
+@router.put(
+    "/{participant_id}",
+    response_model=ParticipantResponse
+)
+def update_participant(
+    participant_id: int,
+    participant: ParticipantCreate,
+    db: Session = Depends(get_db)
+):
+    existing_participant = (
+        db.query(Participant)
+        .filter(
+            Participant.id == participant_id
+        )
+        .first()
+    )
+
+    if not existing_participant:
+        raise HTTPException(
+            status_code=404,
+            detail="Participant not found"
+        )
+
+    existing_participant.name = participant.name
+
+    db.commit()
+    db.refresh(existing_participant)
+
+    return existing_participant
 
 
 @router.delete("/{participant_id}")
