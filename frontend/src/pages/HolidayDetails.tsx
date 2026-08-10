@@ -8,14 +8,16 @@ import type { Participant } from "../types/Participant";
 
 import {
     getParticipants,
-    createParticipant
+    createParticipant,
+    deleteParticipant
 } from "../services/participantService";
 
 import type { Expense } from "../types/Expense";
 
 import {
     getExpenses,
-    createExpense
+    createExpense,
+    deleteExpense
 } from "../services/expenseService";
 
 import type { Settlement } from "../types/Settlement";
@@ -131,6 +133,33 @@ function HolidayDetails() {
         setParticipantName("");
     }
 
+    async function handleDeleteParticipant(
+        participantId: number
+    ) {
+        if (!id) {
+            return;
+        }
+
+        try {
+            await deleteParticipant(
+                participantId
+            );
+
+            const updatedParticipants =
+                await getParticipants(id);
+
+            setParticipants(
+                updatedParticipants
+            );
+        } catch (error) {
+            alert(
+                error instanceof Error
+                    ? error.message
+                    : "Failed to delete participant"
+            );
+        }
+    }
+
     async function handleCreateExpense() {
         if (
             !id ||
@@ -166,6 +195,26 @@ function HolidayDetails() {
         setAmount("");
         setPaidBy("");
         setSelectedParticipants([]);
+    }
+
+    async function handleDeleteExpense(
+        expenseId: number
+    ) {
+        if (!id) {
+            return;
+        }
+
+        await deleteExpense(expenseId);
+
+        const updatedExpenses =
+            await getExpenses(id);
+
+        setExpenses(updatedExpenses);
+
+        const updatedSettlements =
+            await getSettlements(id);
+
+        setSettlements(updatedSettlements);
     }
 
     if (!holiday) {
@@ -208,6 +257,16 @@ function HolidayDetails() {
                             key={participant.id}
                         >
                             {participant.name}
+
+                            <button
+                                onClick={() =>
+                                    handleDeleteParticipant(
+                                        participant.id
+                                    )
+                                }
+                            >
+                                Delete
+                            </button>
                         </li>
                     )
                 )}
@@ -307,8 +366,19 @@ function HolidayDetails() {
             <ul>
                 {expenses.map((expense) => (
                     <li key={expense.id}>
-                        {expense.description} - {"\u00A3"}
+                        {expense.description}
+                        {" - £"}
                         {expense.amount}
+
+                        <button
+                            onClick={() =>
+                                handleDeleteExpense(
+                                    expense.id
+                                )
+                            }
+                        >
+                            Delete
+                        </button>
                     </li>
                 ))}
             </ul>

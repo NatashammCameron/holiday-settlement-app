@@ -34,9 +34,29 @@ export async function createParticipant(
         }
     );
 
+    
+
     if (!response.ok) {
         throw new Error(
             "Failed to create participant"
         );
+    }
+
+   
+}
+export async function deleteParticipant(
+    participantId: number
+): Promise<void> {
+    const response = await fetch(
+        `http://127.0.0.1:8000/participants/${participantId}`,
+        {
+            method: "DELETE"
+        }
+    );
+
+    if (!response.ok) {
+        const error = await response.json();
+
+        throw new Error(error.detail);
     }
 }
