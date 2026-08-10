@@ -44,6 +44,31 @@ export async function createParticipant(
 
    
 }
+export async function updateParticipant(
+    participantId: number,
+    name: string,
+    holidayId: string
+): Promise<void> {
+    const response = await fetch(
+        `http://127.0.0.1:8000/participants/${participantId}`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name,
+                holiday_id: Number(holidayId)
+            })
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error(
+            "Failed to update participant"
+        );
+    }
+}
 export async function deleteParticipant(
     participantId: number
 ): Promise<void> {
