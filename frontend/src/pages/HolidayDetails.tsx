@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import type { Holiday } from "../types/Holiday";
-import { getHoliday } from "../services/holidayService";
+import {
+    getHoliday,
+    updateHoliday,
+    deleteHoliday
+} from "../services/holidayService";
 
 import type { Participant } from "../types/Participant";
 
@@ -311,6 +315,49 @@ function HolidayDetails() {
         setEditSelectedParticipants([]);
     }
 
+    async function handleEditHoliday() {
+        if (!id || !holiday) {
+            return;
+        }
+
+        const newName = prompt(
+            "Enter holiday name",
+            holiday.name
+        );
+
+        if (!newName?.trim()) {
+            return;
+        }
+
+        await updateHoliday(
+            id,
+            newName
+        );
+
+        const updatedHoliday =
+            await getHoliday(id);
+
+        setHoliday(updatedHoliday);
+    }
+
+    async function handleDeleteHoliday() {
+        if (!id) {
+            return;
+        }
+
+        const confirmed =
+            window.confirm(
+                "Delete this holiday?"
+            );
+
+        if (!confirmed) {
+            return;
+        }
+
+        await deleteHoliday(id);
+
+        window.location.href = "/";
+    }
     async function handleDeleteExpense(
         expenseId: number
     ) {
@@ -339,6 +386,21 @@ function HolidayDetails() {
         <div className="container">
             <h1>{holiday.name}</h1>
 
+            <button
+                onClick={handleEditHoliday}
+            >
+                Edit Holiday
+            </button>
+
+            <button
+                onClick={handleDeleteHoliday}
+            >
+                Delete Holiday
+            </button>
+
+            <p>
+                Holiday ID: {holiday.id}
+            </p>
             <p>
                 Holiday ID: {holiday.id}
             </p>
