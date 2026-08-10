@@ -78,15 +78,27 @@ def update_holiday(
     "/{holiday_id}",
     response_model=HolidayResponse
 )
+@router.get(
+    "/{holiday_id}",
+    response_model=HolidayResponse
+)
 def get_holiday(
     holiday_id: int,
     db: Session = Depends(get_db)
 ):
     holiday = (
         db.query(Holiday)
-        .filter(Holiday.id == holiday_id)
+        .filter(
+            Holiday.id == holiday_id
+        )
         .first()
     )
+
+    if not holiday:
+        raise HTTPException(
+            status_code=404,
+            detail="Holiday not found"
+        )
 
     return holiday
 
