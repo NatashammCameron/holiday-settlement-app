@@ -45,7 +45,53 @@ export async function createExpense(
         throw new Error("Failed to create expense");
     }
 }
+export async function updateExpense(
+    expenseId: number,
+    description: string,
+    amount: number,
+    holidayId: string,
+    paidByParticipantId: number,
+    participantIds: number[]
+): Promise<void> {
+    const response = await fetch(
+        `http://127.0.0.1:8000/expenses/${expenseId}`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                description,
+                amount,
+                holiday_id: Number(holidayId),
+                paid_by_participant_id:
+                    paidByParticipantId,
+                participant_ids: participantIds
+            })
+        }
+    );
 
+    if (!response.ok) {
+        throw new Error(
+            "Failed to update expense"
+        );
+    }
+}
+export async function getExpenseParticipants(
+    expenseId: number
+): Promise<number[]> {
+    const response = await fetch(
+        `http://127.0.0.1:8000/expenses/${expenseId}/participants`
+    );
+
+    if (!response.ok) {
+        throw new Error(
+            "Failed to fetch expense participants"
+        );
+    }
+
+    return response.json();
+}
 export async function deleteExpense(
     expenseId: number
 ): Promise<void> {
