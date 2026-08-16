@@ -1,6 +1,7 @@
-def test_create_holiday(client):
+def test_create_holiday(client, auth_headers):
     response = client.post(
         "/holidays/",
+        headers=auth_headers,
         json={
             "name": "Paris Trip"
         }
@@ -14,9 +15,10 @@ def test_create_holiday(client):
     assert data["name"] == "Paris Trip"
 
 
-def test_get_holiday(client):
+def test_get_holiday(client, auth_headers):
     create_response = client.post(
         "/holidays/",
+        headers=auth_headers,
         json={
             "name": "Spain Trip"
         }
@@ -27,7 +29,8 @@ def test_get_holiday(client):
     )
 
     response = client.get(
-        f"/holidays/{holiday_id}"
+        f"/holidays/{holiday_id}",
+        headers=auth_headers
     )
 
     assert response.status_code == 200
@@ -38,9 +41,10 @@ def test_get_holiday(client):
     assert data["name"] == "Spain Trip"
 
 
-def test_get_all_holidays(client):
+def test_get_all_holidays(client, auth_headers):
     client.post(
         "/holidays/",
+        headers=auth_headers,
         json={
             "name": "Holiday One"
         }
@@ -48,13 +52,15 @@ def test_get_all_holidays(client):
 
     client.post(
         "/holidays/",
+        headers=auth_headers,
         json={
             "name": "Holiday Two"
         }
     )
 
     response = client.get(
-        "/holidays/"
+        "/holidays/",
+        headers=auth_headers
     )
 
     assert response.status_code == 200
@@ -69,9 +75,10 @@ def test_get_all_holidays(client):
     assert len(data) >= 2
 
 
-def test_update_holiday(client):
+def test_update_holiday(client, auth_headers):
     create_response = client.post(
         "/holidays/",
+        headers=auth_headers,
         json={
             "name": "Old Name"
         }
@@ -83,6 +90,7 @@ def test_update_holiday(client):
 
     update_response = client.put(
         f"/holidays/{holiday_id}",
+        headers=auth_headers,
         json={
             "name": "New Name"
         }
@@ -100,7 +108,8 @@ def test_update_holiday(client):
     )
 
     get_response = client.get(
-        f"/holidays/{holiday_id}"
+        f"/holidays/{holiday_id}",
+        headers=auth_headers
     )
 
     assert (
@@ -109,9 +118,10 @@ def test_update_holiday(client):
     )
 
 
-def test_delete_holiday(client):
+def test_delete_holiday(client, auth_headers):
     create_response = client.post(
         "/holidays/",
+        headers=auth_headers,
         json={
             "name": "Delete Me"
         }
@@ -122,7 +132,8 @@ def test_delete_holiday(client):
     )
 
     delete_response = client.delete(
-        f"/holidays/{holiday_id}"
+        f"/holidays/{holiday_id}",
+        headers=auth_headers
     )
 
     assert delete_response.status_code == 200
@@ -133,8 +144,9 @@ def test_delete_holiday(client):
     )
 
     get_response = client.get(
-    f"/holidays/{holiday_id}"
-)
+        f"/holidays/{holiday_id}",
+        headers=auth_headers
+    )
 
     assert (
         get_response.status_code
@@ -148,10 +160,12 @@ def test_delete_holiday(client):
 
 
 def test_update_nonexistent_holiday_returns_404(
-    client
+    client,
+    auth_headers
 ):
     response = client.put(
         "/holidays/999999",
+        headers=auth_headers,
         json={
             "name": "New Name"
         }
@@ -168,10 +182,12 @@ def test_update_nonexistent_holiday_returns_404(
 
 
 def test_delete_nonexistent_holiday_returns_404(
-    client
+    client,
+    auth_headers
 ):
     response = client.delete(
-        "/holidays/999999"
+        "/holidays/999999",
+        headers=auth_headers
     )
 
     assert response.status_code == 404
@@ -185,10 +201,12 @@ def test_delete_nonexistent_holiday_returns_404(
 
 
 def test_empty_holiday_name_rejected(
-    client
+    client,
+    auth_headers
 ):
     response = client.post(
         "/holidays/",
+        headers=auth_headers,
         json={
             "name": ""
         }
@@ -198,10 +216,12 @@ def test_empty_holiday_name_rejected(
 
 
 def test_holiday_name_too_long_rejected(
-    client
+    client,
+    auth_headers
 ):
     response = client.post(
         "/holidays/",
+        headers=auth_headers,
         json={
             "name": "A" * 101
         }
@@ -211,10 +231,12 @@ def test_holiday_name_too_long_rejected(
 
 
 def test_updated_holiday_name_too_long_rejected(
-    client
+    client,
+    auth_headers
 ):
     create_response = client.post(
         "/holidays/",
+        headers=auth_headers,
         json={
             "name": "Valid Name"
         }
@@ -226,6 +248,7 @@ def test_updated_holiday_name_too_long_rejected(
 
     response = client.put(
         f"/holidays/{holiday_id}",
+        headers=auth_headers,
         json={
             "name": "A" * 101
         }

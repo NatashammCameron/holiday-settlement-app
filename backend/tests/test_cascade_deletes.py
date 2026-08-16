@@ -1,8 +1,10 @@
 def test_delete_holiday_cascades_related_records(
-    client
+    client,
+    auth_headers
 ):
     holiday_response = client.post(
         "/holidays/",
+        headers=auth_headers,
         json={
             "name": "Cascade Test"
         }
@@ -49,7 +51,8 @@ def test_delete_holiday_cascades_related_records(
     )
 
     delete_response = client.delete(
-        f"/holidays/{holiday_id}"
+        f"/holidays/{holiday_id}",
+        headers=auth_headers
     )
 
     assert (
@@ -58,7 +61,8 @@ def test_delete_holiday_cascades_related_records(
     )
 
     holiday_check = client.get(
-        f"/holidays/{holiday_id}"
+        f"/holidays/{holiday_id}",
+        headers=auth_headers
     )
 
     assert (

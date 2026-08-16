@@ -1,6 +1,7 @@
-def create_holiday(client):
+def create_holiday(client, auth_headers):
     response = client.post(
         "/holidays/",
+        headers=auth_headers,
         json={
             "name": "Test Holiday"
         }
@@ -9,8 +10,11 @@ def create_holiday(client):
     return response.json()["id"]
 
 
-def test_create_participant(client):
-    holiday_id = create_holiday(client)
+def test_create_participant(client, auth_headers):
+    holiday_id = create_holiday(
+        client,
+        auth_headers
+    )
 
     response = client.post(
         "/participants/",
@@ -30,9 +34,13 @@ def test_create_participant(client):
 
 
 def test_get_participants_for_holiday(
-    client
+    client,
+    auth_headers
 ):
-    holiday_id = create_holiday(client)
+    holiday_id = create_holiday(
+        client,
+        auth_headers
+    )
 
     client.post(
         "/participants/",
@@ -61,8 +69,11 @@ def test_get_participants_for_holiday(
     assert len(data) == 2
 
 
-def test_update_participant(client):
-    holiday_id = create_holiday(client)
+def test_update_participant(client, auth_headers):
+    holiday_id = create_holiday(
+        client,
+        auth_headers
+    )
 
     create_response = client.post(
         "/participants/",
@@ -92,8 +103,11 @@ def test_update_participant(client):
     )
 
 
-def test_delete_participant(client):
-    holiday_id = create_holiday(client)
+def test_delete_participant(client, auth_headers):
+    holiday_id = create_holiday(
+        client,
+        auth_headers
+    )
 
     create_response = client.post(
         "/participants/",
@@ -120,9 +134,13 @@ def test_delete_participant(client):
 
 
 def test_update_nonexistent_participant(
-    client
+    client,
+    auth_headers
 ):
-    holiday_id = create_holiday(client)
+    holiday_id = create_holiday(
+        client,
+        auth_headers
+    )
 
     response = client.put(
         "/participants/999999",
@@ -136,7 +154,8 @@ def test_update_nonexistent_participant(
 
 
 def test_delete_nonexistent_participant(
-    client
+    client,
+    auth_headers
 ):
     response = client.delete(
         "/participants/999999"
@@ -146,9 +165,13 @@ def test_delete_nonexistent_participant(
 
 
 def test_empty_participant_name_rejected(
-    client
+    client,
+    auth_headers
 ):
-    holiday_id = create_holiday(client)
+    holiday_id = create_holiday(
+        client,
+        auth_headers
+    )
 
     response = client.post(
         "/participants/",
@@ -162,9 +185,13 @@ def test_empty_participant_name_rejected(
 
 
 def test_participant_name_too_long_rejected(
-    client
+    client,
+    auth_headers
 ):
-    holiday_id = create_holiday(client)
+    holiday_id = create_holiday(
+        client,
+        auth_headers
+    )
 
     response = client.post(
         "/participants/",

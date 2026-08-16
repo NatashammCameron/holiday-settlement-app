@@ -1,6 +1,7 @@
-def create_holiday(client):
+def create_holiday(client, auth_headers):
     response = client.post(
         "/holidays/",
+        headers=auth_headers,
         json={
             "name": "Test Holiday"
         }
@@ -26,9 +27,13 @@ def create_participant(
 
 
 def create_expense_test_data(
-    client
+    client,
+    auth_headers
 ):
-    holiday_id = create_holiday(client)
+    holiday_id = create_holiday(
+        client,
+        auth_headers
+    )
 
     participant_1 = create_participant(
         client,
@@ -49,12 +54,15 @@ def create_expense_test_data(
     )
 
 
-def test_create_expense(client):
+def test_create_expense(client, auth_headers):
     (
         holiday_id,
         participant_1,
         participant_2
-    ) = create_expense_test_data(client)
+    ) = create_expense_test_data(
+        client,
+        auth_headers
+    )
 
     response = client.post(
         "/expenses/",
@@ -87,13 +95,17 @@ def test_create_expense(client):
 
 
 def test_get_expenses_for_holiday(
-    client
+    client,
+    auth_headers
 ):
     (
         holiday_id,
         participant_1,
         participant_2
-    ) = create_expense_test_data(client)
+    ) = create_expense_test_data(
+        client,
+        auth_headers
+    )
 
     client.post(
         "/expenses/",
@@ -125,12 +137,15 @@ def test_get_expenses_for_holiday(
     )
 
 
-def test_update_expense(client):
+def test_update_expense(client, auth_headers):
     (
         holiday_id,
         participant_1,
         participant_2
-    ) = create_expense_test_data(client)
+    ) = create_expense_test_data(
+        client,
+        auth_headers
+    )
 
     create_response = client.post(
         "/expenses/",
@@ -190,12 +205,15 @@ def test_update_expense(client):
     )
 
 
-def test_delete_expense(client):
+def test_delete_expense(client, auth_headers):
     (
         holiday_id,
         participant_1,
         participant_2
-    ) = create_expense_test_data(client)
+    ) = create_expense_test_data(
+        client,
+        auth_headers
+    )
 
     create_response = client.post(
         "/expenses/",
@@ -229,13 +247,17 @@ def test_delete_expense(client):
 
 
 def test_negative_amount_rejected(
-    client
+    client,
+    auth_headers
 ):
     (
         holiday_id,
         participant_1,
         participant_2
-    ) = create_expense_test_data(client)
+    ) = create_expense_test_data(
+        client,
+        auth_headers
+    )
 
     response = client.post(
         "/expenses/",
@@ -255,13 +277,17 @@ def test_negative_amount_rejected(
 
 
 def test_zero_amount_rejected(
-    client
+    client,
+    auth_headers
 ):
     (
         holiday_id,
         participant_1,
         participant_2
-    ) = create_expense_test_data(client)
+    ) = create_expense_test_data(
+        client,
+        auth_headers
+    )
 
     response = client.post(
         "/expenses/",
@@ -281,7 +307,8 @@ def test_zero_amount_rejected(
 
 
 def test_delete_nonexistent_expense_returns_404(
-    client
+    client,
+    auth_headers
 ):
     response = client.delete(
         "/expenses/999999"
@@ -296,13 +323,17 @@ def test_delete_nonexistent_expense_returns_404(
 
 
 def test_update_nonexistent_expense_returns_404(
-    client
+    client,
+    auth_headers
 ):
     (
         holiday_id,
         participant_1,
         participant_2
-    ) = create_expense_test_data(client)
+    ) = create_expense_test_data(
+        client,
+        auth_headers
+    )
 
     response = client.put(
         "/expenses/999999",
@@ -327,13 +358,17 @@ def test_update_nonexistent_expense_returns_404(
 
 
 def test_get_expense_participants(
-    client
+    client,
+    auth_headers
 ):
     (
         holiday_id,
         participant_1,
         participant_2
-    ) = create_expense_test_data(client)
+    ) = create_expense_test_data(
+        client,
+        auth_headers
+    )
 
     create_response = client.post(
         "/expenses/",

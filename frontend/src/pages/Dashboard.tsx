@@ -6,7 +6,7 @@ import {
     getHolidays,
     createHoliday
 } from "../services/holidayService";
-
+import LogoutButton from "../components/LogoutButton";
 function Dashboard() {
     const [holidays, setHolidays] = useState<Holiday[]>([]);
     const [holidayName, setHolidayName] = useState("");
@@ -53,6 +53,7 @@ function Dashboard() {
                     <h1 className="dashboard-title">
                         Holiday Settlement
                     </h1>
+                    <LogoutButton />
                    
                 </header>
 

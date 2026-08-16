@@ -1,8 +1,22 @@
 import type { Holiday } from "../types/Holiday";
 
+const API_URL = "http://127.0.0.1:8000";
+
+function getAuthHeaders() {
+    const token = localStorage.getItem("token");
+
+    return {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+    };
+}
+
 export async function getHolidays(): Promise<Holiday[]> {
     const response = await fetch(
-        "http://127.0.0.1:8000/holidays/"
+        `${API_URL}/holidays/`,
+        {
+            headers: getAuthHeaders()
+        }
     );
 
     if (!response.ok) {
@@ -16,15 +30,13 @@ export async function createHoliday(
     name: string
 ): Promise<void> {
     const response = await fetch(
-        "http://127.0.0.1:8000/holidays/",
+        `${API_URL}/holidays/`,
         {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify({
-                name: name,
-            }),
+                name
+            })
         }
     );
 
@@ -37,7 +49,10 @@ export async function getHoliday(
     holidayId: string
 ): Promise<Holiday> {
     const response = await fetch(
-        `http://127.0.0.1:8000/holidays/${holidayId}`
+        `${API_URL}/holidays/${holidayId}`,
+        {
+            headers: getAuthHeaders()
+        }
     );
 
     if (!response.ok) {
@@ -54,12 +69,10 @@ export async function updateHoliday(
     name: string
 ): Promise<void> {
     const response = await fetch(
-        `http://127.0.0.1:8000/holidays/${holidayId}`,
+        `${API_URL}/holidays/${holidayId}`,
         {
             method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify({
                 name
             })
@@ -77,9 +90,10 @@ export async function deleteHoliday(
     holidayId: string
 ): Promise<void> {
     const response = await fetch(
-        `http://127.0.0.1:8000/holidays/${holidayId}`,
+        `${API_URL}/holidays/${holidayId}`,
         {
-            method: "DELETE"
+            method: "DELETE",
+            headers: getAuthHeaders()
         }
     );
 

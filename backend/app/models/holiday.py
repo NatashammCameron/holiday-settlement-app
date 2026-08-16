@@ -1,4 +1,8 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy import ForeignKey
+
 from sqlalchemy.orm import relationship
 
 from app.database.database import Base
@@ -7,11 +11,24 @@ from app.database.database import Base
 class Holiday(Base):
     __tablename__ = "holidays"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(
+        Integer,
+        primary_key=True
+    )
 
     name = Column(
         String,
         nullable=False
+    )
+
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id"),
+        nullable=True
+    )
+
+    user = relationship(
+        "User"
     )
 
     participants = relationship(
