@@ -3,7 +3,14 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database.dependencies import get_db
+
 from app.models.holiday import Holiday
+from app.models.user import User
+
+from app.auth.dependencies import (
+    get_current_user
+)
+
 from app.schemas.holiday_schema import (
     HolidayCreate,
     HolidayResponse
@@ -21,10 +28,14 @@ router = APIRouter(
 )
 def create_holiday(
     holiday: HolidayCreate,
+    current_user: User = Depends(
+        get_current_user
+    ),
     db: Session = Depends(get_db)
 ):
     new_holiday = Holiday(
-        name=holiday.name
+        name=holiday.name,
+        user_id=current_user.id
     )
 
     db.add(new_holiday)
@@ -32,16 +43,28 @@ def create_holiday(
     db.refresh(new_holiday)
 
     return new_holiday
+
+
 @router.get(
     "/",
     response_model=list[HolidayResponse]
 )
 def get_holidays(
+    current_user: User = Depends(
+        get_current_user
+    ),
     db: Session = Depends(get_db)
 ):
-    holidays = db.query(Holiday).all()
+    holidays = (
+        db.query(Holiday)
+        .filter(
+            Holiday.user_id == current_user.id
+        )
+        .all()
+    )
 
     return holidays
+
 
 @router.put(
     "/{holiday_id}",
@@ -50,12 +73,16 @@ def get_holidays(
 def update_holiday(
     holiday_id: int,
     holiday: HolidayCreate,
+    current_user: User = Depends(
+        get_current_user
+    ),
     db: Session = Depends(get_db)
 ):
     existing_holiday = (
         db.query(Holiday)
         .filter(
-            Holiday.id == holiday_id
+            Holiday.id == holiday_id,
+            Holiday.user_id == current_user.id
         )
         .first()
     )
@@ -78,18 +105,18 @@ def update_holiday(
     "/{holiday_id}",
     response_model=HolidayResponse
 )
-@router.get(
-    "/{holiday_id}",
-    response_model=HolidayResponse
-)
 def get_holiday(
     holiday_id: int,
+    current_user: User = Depends(
+        get_current_user
+    ),
     db: Session = Depends(get_db)
 ):
     holiday = (
         db.query(Holiday)
         .filter(
-            Holiday.id == holiday_id
+            Holiday.id == holiday_id,
+            Holiday.user_id == current_user.id
         )
         .first()
     )
@@ -102,15 +129,22 @@ def get_holiday(
 
     return holiday
 
-@router.delete("/{holiday_id}")
+
+@router.delete(
+    "/{holiday_id}"
+)
 def delete_holiday(
     holiday_id: int,
+    current_user: User = Depends(
+        get_current_user
+    ),
     db: Session = Depends(get_db)
 ):
     holiday = (
         db.query(Holiday)
         .filter(
-            Holiday.id == holiday_id
+            Holiday.id == holiday_id,
+            Holiday.user_id == current_user.id
         )
         .first()
     )

@@ -34,6 +34,30 @@ TestingSessionLocal = sessionmaker(
     bind=engine
 )
 
+@pytest.fixture
+def auth_headers(client):
+    client.post(
+        "/auth/register",
+        json={
+            "email": "test@example.com",
+            "password": "password123"
+        }
+    )
+
+    response = client.post(
+        "/auth/login",
+        json={
+            "email": "test@example.com",
+            "password": "password123"
+        }
+    )
+
+    token = response.json()["access_token"]
+
+    return {
+        "Authorization": f"Bearer {token}"
+    }
+
 
 def override_get_db():
     db = TestingSessionLocal()
