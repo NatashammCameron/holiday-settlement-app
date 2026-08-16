@@ -144,7 +144,7 @@ GET /settlements/holiday/{holiday_id}/payments
 ### Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/NatashammCameron/holiday-settlement-app.git
 cd holiday-settlement-app
 ```
 
